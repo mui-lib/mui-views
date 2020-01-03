@@ -18,3 +18,13 @@ depending on the [Material-UI](https://material-ui.com/),
 covering topics of views/pages/routes/animations/transitions/etc,
 and designed for commercialized products,
 which is also an extended library of the core [mui-lib](https://github.com/mui-lib/mui-lib).
+
+
+## Goals
+
+This repo will change often with various views,
+as like the graphical stuff never satisfies.
+
+Here will be a demo, which can be used for references.
+
+<!-- ## Motivations -->
