@@ -6,6 +6,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
+import Skeleton from '@material-ui/lab/Skeleton';
 import {useStyles} from './AppSecondaryMenu.styles';
 
 interface IBaseMenuItem {
@@ -25,7 +26,7 @@ export interface IMenuSummaryPage extends IMenuItem {
 }
 
 export interface IMenuSection<T extends IMenuItem = IMenuItem> extends IBaseMenuItem {
-	items: T[];
+	items?: T[];
 }
 
 export const newMenuItem = (id: string, name: string): IMenuItem => ({_id: id, name});
@@ -45,6 +46,8 @@ interface IProps<T extends IMenuItem, S extends IMenuSection<T>> {
 	sections: S[];
 	selectedMenuItemId?: string;
 	onSelect: (entryId: string, item: T, section: S) => any;
+
+	skeletons?: number;
 }
 
 // Works like a router, providing the navigation functionality.
@@ -58,6 +61,7 @@ const AppSecondaryMenu = React.memo(<T extends IMenuItem, S extends IMenuSection
 		selectedMenuItemId, onSelect,
 		color, background,
 		itemColor, itemBackground,
+		skeletons = 8,
 	}: IProps<T, S>,
 ) => {
 	const cls = useStyles();
@@ -78,10 +82,16 @@ const AppSecondaryMenu = React.memo(<T extends IMenuItem, S extends IMenuSection
 		<li key={section._id} className={cls.listSection}>
 			<ul className={cls.ul}>
 				<ListSubheader className={cls.sectionHeader} style={{color}}>{section.name}</ListSubheader>
-				{section.items.map((item, index) => renderMenuItems(section, item, index))}
+				{section.items ? section.items.map((item, index) => renderMenuItems(section, item, index)) : renderSkeletons()}
 			</ul>
 		</li>
 	);
+
+	const renderSkeletons = (items: number = skeletons) => new Array(items).fill(null).map((v, index) => (
+		<div key={index} className={clsx(cls.menuItemSkeleton, {[cls.menuItemFollowed]: index > 0})}>
+			<Skeleton variant='text' animation="wave" className={cls.skeleton}/>
+		</div>
+	));
 
 	return (
 		<List className={cls.root} style={{background}}>
