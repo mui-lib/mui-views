@@ -15,7 +15,8 @@ export const useStyles = makeStyles({
 
 	// The navigator and content mode.
 	ctnNavContent: {flex: 1, background: '#eee', overflow: 'hidden', display: 'flex'},
-	nav: {display: 'flex'},
+	nav: {display: 'flex', overflowY: 'auto'},
+	nav2: {display: 'flex', overflowY: 'auto'},
 	content: {flex: 1, overflow: 'auto'},
 });
 
@@ -23,12 +24,15 @@ interface IProps {
 	title: string;
 	embedded?: boolean;
 	nav?: React.ReactNode;
+	// The secondary menu, next to the primary navigator.
+	// FIXME Check out the differences between nav and menu?
+	nav2?: React.ReactNode;
 	body: React.ReactNode;
 }
 
 // The layout with app header for embedded and standalone applications.
 // Possible Names: [ LayoutAppHeader | LayoutEmbeddedApp | LayoutStandaloneApp ]
-export const LayoutAppHeader = React.memo<IProps>(({embedded, title, nav, body}, next, cls = useStyles()) => (
+export const LayoutAppHeader = React.memo<IProps>(({embedded, title, nav, nav2, body}, next, cls = useStyles()) => (
 	<div className={cls.container}>
 		<AppBar position='static' className={embedded || window['_$embedded'] ? cls.ctnAppBar : undefined}>
 			<Toolbar>
@@ -38,6 +42,7 @@ export const LayoutAppHeader = React.memo<IProps>(({embedded, title, nav, body},
 		{nav ? (
 			<div className={cls.ctnNavContent}>
 				<div className={cls.nav}>{nav}</div>
+				{nav2 ? <div className={cls.nav2}>{nav2}</div> : undefined}
 				<div className={cls.content}>{body}</div>
 			</div>
 		) : (
