@@ -29,7 +29,7 @@ export interface IMenuSection<T extends IMenuItem = IMenuItem> extends IBaseMenu
 	items?: T[];
 }
 
-export const newMenuItem = (id: string, name: string): IMenuItem => ({_id: id, name});
+export const newMenuItem = (_id: string, name: string, color?: string): IMenuItem => ({_id, name, color});
 export const newMenuSummaryItem = (id: string, name: string, description?: string): IMenuSummaryPage => ({...newMenuItem(id, name), description});
 export const newMenuSection = <T extends IMenuItem>(id: string, name: string, items: T[]): IMenuSection<T> => ({_id: id, name, items});
 
@@ -102,10 +102,10 @@ const AppSecondaryMenu = React.memo(<T extends IMenuItem, S extends IMenuSection
 
 export const getAppSecondaryMenu = <T extends IMenuItem = IMenuItem, S extends IMenuSection<T> = IMenuSection<T>>(): React.FC<IProps<T, S>> => AppSecondaryMenu;
 
-export const AppSecondaryMenuGroup = React.memo(({children}) => {
+export const AppSecondaryMenuGroup = React.memo(({background, children}: { background?: string, children: React.ReactNode }) => {
 	const cls = useStyles();
 	// How to write the codes of simple components in fewer lines?
 	return (
-		<div className={cls.group}>{children}</div>
+		<div className={cls.group} style={{background}}>{children}</div>
 	);
 });
