@@ -67,6 +67,12 @@ often supported with simple and plain views.
 
 The views containing visual diagrams.
 
+### 4. Docs
+
+The views rendering kinds of text documents.
+
+- View Markdown
+
 ## III. References
 
 - [Diagram | Definition of Diagram by Merriam-Webster](https://www.merriam-webster.com/dictionary/diagram)
