@@ -45,6 +45,7 @@ interface IProps<T extends IMenuItem, S extends IMenuSection<T>> {
 
 	sections: S[];
 	noTreedAssets?: boolean;
+	getMenuItemIcon?: (item: T) => React.ReactElement;
 	selectedMenuItemId?: string;
 	onSelect: (entryId: string, item: T, section: S) => any;
 
@@ -59,7 +60,7 @@ interface IProps<T extends IMenuItem, S extends IMenuSection<T>> {
 const AppSecondaryMenu = React.memo(<T extends IMenuItem, S extends IMenuSection<T>>(
 	{
 		sections,
-		noTreedAssets,
+		noTreedAssets, getMenuItemIcon,
 		selectedMenuItemId, onSelect,
 		color, background,
 		itemColor, itemBackground,
@@ -71,7 +72,7 @@ const AppSecondaryMenu = React.memo(<T extends IMenuItem, S extends IMenuSection
 	const renderSectionTreedItems = (section: S, items: T[], depth: number) => {
 		const res: React.ReactElement[] = [];
 		items.map((item: any, index) => {
-			res.push(renderMenuItems(section, item, index));
+			res.push(renderMenuItems(section, item, depth, depth !== 0 || index !== 0));
 			if (depth < 8 && item._children && item._children.length > 0) {
 				res.push(...renderSectionTreedItems(section, item._children, depth + 1));
 			}
@@ -79,14 +80,19 @@ const AppSecondaryMenu = React.memo(<T extends IMenuItem, S extends IMenuSection
 		return res;
 	};
 
-	const renderMenuItems = (section: S, item: T, index: number) => (
+	const renderMenuItems = (section: S, item: T, depth: number, followed: boolean) => (
 		<ListItem
 			key={item._id}
 			button selected={selectedMenuItemId === item._id}
 			onClick={() => onSelect(item._id, item, section)}
-			className={clsx(cls.menuItem, {[cls.menuItemFollowed]: index > 0})}
-			style={selectedMenuItemId === item._id ? {background: item.color || color, color: 'white'} : {background: itemBackground, color: itemColor}}
+			className={clsx(cls.menuItem, {[cls.menuItemFollowed]: followed})}
+			style={{
+				paddingLeft: (20 * depth + 16) + 'px',
+				// Dynamical styles, following references and state.
+				...(selectedMenuItemId === item._id ? {background: item.color || color, color: 'white'} : {background: itemBackground, color: itemColor}),
+			}}
 		>
+			{getMenuItemIcon ? getMenuItemIcon(item) : undefined}
 			<ListItemText primary={item.name} style={{margin: '6px 0'}} disableTypography={true}/>
 		</ListItem>
 	);
@@ -96,7 +102,7 @@ const AppSecondaryMenu = React.memo(<T extends IMenuItem, S extends IMenuSection
 			<ul className={cls.ul}>
 				<ListSubheader className={cls.sectionHeader} style={{color}}>{section.name}</ListSubheader>
 				{section.items ? (
-					noTreedAssets ? section.items.map((item, index) => renderMenuItems(section, item, index)) : renderSectionTreedItems(section, section.items, 0)
+					noTreedAssets ? section.items.map((item, index) => renderMenuItems(section, item, index, index !== 0)) : renderSectionTreedItems(section, section.items, 0)
 				) : renderSkeletons()}
 			</ul>
 		</li>
