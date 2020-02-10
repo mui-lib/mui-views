@@ -45,6 +45,8 @@ interface IProps<T extends IMenuItem, S extends IMenuSection<T>> {
 
 	sections: S[];
 	noTreedAssets?: boolean;
+	// Whether to show in the menu.
+	filter?: (item: T) => boolean;
 	getMenuItemIcon?: (item: T) => React.ReactElement;
 	selectedMenuItemId?: string;
 	onSelect: (entryId: string, item: T, section: S) => any;
@@ -65,6 +67,7 @@ const AppSecondaryMenu = React.memo(<T extends IMenuItem, S extends IMenuSection
 		color, background,
 		itemColor, itemBackground,
 		skeletons = 8,
+		filter,
 	}: IProps<T, S>,
 ) => {
 	const cls = useStyles();
@@ -73,8 +76,10 @@ const AppSecondaryMenu = React.memo(<T extends IMenuItem, S extends IMenuSection
 		const res: React.ReactElement[] = [];
 		items.map((item: any, index) => {
 			res.push(renderMenuItems(section, item, depth, depth !== 0 || index !== 0));
-			if (depth < 8 && item._children && item._children.length > 0) {
-				res.push(...renderSectionTreedItems(section, item._children, depth + 1));
+			if (depth > 8 || !item._children) {return;}
+			const sub = filter ? item._children.filter(filter) : item._children;
+			if (sub && sub.length > 0) {
+				res.push(...renderSectionTreedItems(section, sub, depth + 1));
 			}
 		});
 		return res;
@@ -102,7 +107,7 @@ const AppSecondaryMenu = React.memo(<T extends IMenuItem, S extends IMenuSection
 			<ul className={cls.ul}>
 				<ListSubheader className={cls.sectionHeader} style={{color}}>{section.name}</ListSubheader>
 				{section.items ? (
-					noTreedAssets ? section.items.map((item, index) => renderMenuItems(section, item, index, index !== 0)) : renderSectionTreedItems(section, section.items, 0)
+					noTreedAssets ? section.items.map((item, index) => renderMenuItems(section, item, 0, index !== 0)) : renderSectionTreedItems(section, section.items, 0)
 				) : renderSkeletons()}
 			</ul>
 		</li>
