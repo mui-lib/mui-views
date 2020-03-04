@@ -12,8 +12,9 @@ export type IRowLabelValue = ISingleLabelValue | (ISingleLabelValue[])
 interface IProps {
 	// TO-DO Support multiple modes:
 	// [ A. Text Mode(minWidth=120) | B.1 Card with Inner Title | B.2 Card with Overflowed Title | C.1 Border-less Table | C.2 Table(Bordered Table) ]
-	mode: 'text' | 'card' | 'card-table' | 'table';
+	mode: 'text' | 'card' | 'table';
 	title?: string,
+	overflowedTitle?: boolean;
 	description?: string;
 	// In the mode.
 	dataset: (IRowLabelValue | undefined)[];
@@ -37,7 +38,7 @@ interface IProps {
 // This like exactly the table view of keys and values, and hence may be named as #TableOfKeysAndValues.
 export const ViewInformativeTable = React.memo<IProps>((
 	{
-		mode, title, description,
+		mode, title, overflowedTitle, description,
 		dataset, className, style, separator,
 		padding = 8, borderRadius, flexLabel = 1, flexValue = 2, styleLabel, styleValue,
 	},
@@ -52,7 +53,7 @@ export const ViewInformativeTable = React.memo<IProps>((
 				<div key={index} className={cls.ctnCellLabelValue}>
 					<div className={cls.ctnTableLabel} style={{
 						flex: fLabel || flexLabel,
-						borderRadius: borderRadius && (ith === 0 || ith === dataset.length - (mode === 'card-table' ? 0 : 1)) ? (
+						borderRadius: borderRadius && (ith === 0 || ith === dataset.length - (mode === 'card' && !overflowedTitle ? 0 : 1)) ? (
 							ith === 0 ? borderRadius + 'px 0px 0px 0px' : '0 0 0 ' + borderRadius + 'px'
 						) : undefined,
 						...styleLabel,
@@ -67,21 +68,49 @@ export const ViewInformativeTable = React.memo<IProps>((
 		</div>
 	);
 
-	return mode === 'card-table' ? (
+	const renderCardTable = () => (
 		<div className={cls.card} style={borderRadius ? {borderRadius, ...style} : style}>
 			{renderComplexRow(0, [[<span className={cls.heading} style={{color: '#396', fontSize: 'large'}} title={description}>{title}</span>, '']])}
 			{dataset.map((row: IRowLabelValue, index) => renderComplexRow(index + 1, Array.isArray(row[0]) ? row : [row] as ISingleLabelValue[]))}
 		</div>
-	) : (mode === 'card' ? (
+	);
+
+	const renderCard = () => (
 		<div style={borderRadius ? {borderRadius, ...style} : style}>
 			<div className={cls.heading} style={{}} title={description}>{title}</div>
 			<div className={cls.card}>
 				{dataset.map((row: IRowLabelValue, index) => renderComplexRow(index, Array.isArray(row[0]) ? row : [row] as ISingleLabelValue[]))}
 			</div>
 		</div>
-	) : (
+	);
+
+	const renderTable = () => (
 		<div className={className ? [cls.ctnTableRoot, className].join(' ') : cls.ctnTableRoot} style={borderRadius ? {borderRadius, ...style} : style}>
 			{dataset.map((row: IRowLabelValue, index) => renderComplexRow(index, Array.isArray(row[0]) ? row : [row] as ISingleLabelValue[]))}
 		</div>
-	));
+	);
+
+	const renderTextView = () => (
+		<div>
+			<div className={cls.heading} style={{}} title={description}>{title}</div>
+			{dataset.map((row: IRowLabelValue, index) => renderComplexRow(index, Array.isArray(row[0]) ? row : [row] as ISingleLabelValue[]))}
+		</div>
+	);
+	const renderTextCard = () => (
+		<div>
+			<div className={cls.heading} style={{}} title={description}>{title}</div>
+			{dataset.map((row: IRowLabelValue, index) => renderComplexRow(index, Array.isArray(row[0]) ? row : [row] as ISingleLabelValue[]))}
+		</div>
+	);
+
+	switch (mode) {
+		case 'card':
+			return overflowedTitle ? renderCard() : renderCardTable();
+		case 'table':
+			return renderTable();
+		case 'text':
+			return overflowedTitle ? renderTextCard() : renderTextView();
+		default:
+			return renderTable();
+	}
 });
