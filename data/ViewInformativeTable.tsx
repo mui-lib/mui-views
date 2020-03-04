@@ -3,17 +3,27 @@
 
 import React from 'react';
 import clsx from 'clsx';
+import {onContextMenuPrevented, onOtherMouseButtonsClicked} from '../../mui-lib/helpers/mouse-event';
 import {useStyles} from './ViewInformativeTable.styles';
 
 // [ label, value, flexLabel, flexValue ]
 export type ISingleLabelValue = [string | any, any, number?, number?]
 export type IRowLabelValue = ISingleLabelValue | (ISingleLabelValue[])
 
+type IMode = 'text' | 'card' | 'table';
+
 interface IProps {
 	// TO-DO Support multiple modes:
 	// [ A. Text Mode(minWidth=120) | B.1 Card with Inner Title | B.2 Card with Overflowed Title | C.1 Border-less Table | C.2 Table(Bordered Table) ]
+	// There are basically two kind of views currently:
+	// 1. Table-mode View
+	// 2. Text-mode View
 	mode: 'text' | 'card' | 'table';
+	// For those modes, optional title can take into effect controlling the opinionated view as a "inline-block"-displayed panel.
+	// - Title-less
 	title?: string,
+	// - Inner-Title
+	// - Outer-Title
 	overflowedTitle?: boolean;
 	description?: string;
 	// In the mode.
@@ -45,6 +55,11 @@ export const ViewInformativeTable = React.memo<IProps>((
 ) => {
 	const cls = useStyles();
 
+	const [$mode, setMode] = React.useState<IMode>(() => mode);
+	const [$overflowedTitle, setOverflowedTitle] = React.useState<boolean | undefined>(() => overflowedTitle);
+	mode = $mode;
+	overflowedTitle = $overflowedTitle;
+
 	dataset = dataset.filter((row: IRowLabelValue) => Boolean(row));
 
 	const renderComplexRow = (ith: number, bundles: ISingleLabelValue[]) => (
@@ -68,16 +83,22 @@ export const ViewInformativeTable = React.memo<IProps>((
 		</div>
 	);
 
+	const onRightButtonClicked = () => setOverflowedTitle(!overflowedTitle);
+	const onMiddleButtonClicked = () => setMode(mode === 'card' ? 'text' : 'table');
+	const onMouseUpEvent = onOtherMouseButtonsClicked(onRightButtonClicked, onMiddleButtonClicked);
+
 	const renderCardTable = () => (
 		<div className={cls.card} style={borderRadius ? {borderRadius, ...style} : style}>
-			{renderComplexRow(0, [[<span className={cls.heading} style={{color: '#396', fontSize: 'large'}} title={description}>{title}</span>, '']])}
+			{renderComplexRow(0, [[(
+				<span className={cls.heading} style={{color: '#396', fontSize: 'large'}} title={description} onMouseUp={onMouseUpEvent} onContextMenu={onContextMenuPrevented}>{title}</span>
+			), '']])}
 			{dataset.map((row: IRowLabelValue, index) => renderComplexRow(index + 1, Array.isArray(row[0]) ? row : [row] as ISingleLabelValue[]))}
 		</div>
 	);
 
 	const renderCard = () => (
 		<div style={borderRadius ? {borderRadius, ...style} : style}>
-			<div className={cls.heading} style={{}} title={description}>{title}</div>
+			<div className={cls.heading} style={{}} title={description} onMouseUp={onMouseUpEvent} onContextMenu={onContextMenuPrevented}>{title}</div>
 			<div className={cls.card}>
 				{dataset.map((row: IRowLabelValue, index) => renderComplexRow(index, Array.isArray(row[0]) ? row : [row] as ISingleLabelValue[]))}
 			</div>
@@ -92,13 +113,13 @@ export const ViewInformativeTable = React.memo<IProps>((
 
 	const renderTextView = () => (
 		<div>
-			<div className={cls.heading} style={{}} title={description}>{title}</div>
+			<div className={cls.heading} style={{}} title={description} onMouseUp={onMouseUpEvent} onContextMenu={onContextMenuPrevented}>{title}</div>
 			{dataset.map((row: IRowLabelValue, index) => renderComplexRow(index, Array.isArray(row[0]) ? row : [row] as ISingleLabelValue[]))}
 		</div>
 	);
 	const renderTextCard = () => (
 		<div>
-			<div className={cls.heading} style={{}} title={description}>{title}</div>
+			<div className={cls.heading} style={{}} title={description} onMouseUp={onMouseUpEvent} onContextMenu={onContextMenuPrevented}>{title}</div>
 			{dataset.map((row: IRowLabelValue, index) => renderComplexRow(index, Array.isArray(row[0]) ? row : [row] as ISingleLabelValue[]))}
 		</div>
 	);
