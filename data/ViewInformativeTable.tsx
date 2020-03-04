@@ -1,5 +1,4 @@
 //
-//
 
 import React from 'react';
 import clsx from 'clsx';
@@ -50,7 +49,7 @@ export const ViewInformativeTable = React.memo<IProps>((
 	{
 		mode, title, overflowedTitle, description,
 		dataset, className, style, separator,
-		padding = 8, borderRadius, flexLabel = 1, flexValue = 2, styleLabel, styleValue,
+		padding, borderRadius, flexLabel = 1, flexValue = 2, styleLabel, styleValue,
 	},
 ) => {
 	const cls = useStyles();
@@ -83,8 +82,37 @@ export const ViewInformativeTable = React.memo<IProps>((
 		</div>
 	);
 
+	const renderBorderlessTableRow = (ith: number, bundles: ISingleLabelValue[]) => (
+		<div className={clsx(cls.ctnTextRow, {[cls.ctnTextRowsFollowed]: ith !== 0})} key={ith}>
+			{bundles.map(([label, value, fLabel, fValue], index) => (
+				<div key={index} className={cls.ctnCellLabelValue}>
+					<div className={cls.ctnTextLabel} style={{
+						flex: fLabel || flexLabel,
+						borderRadius: borderRadius && (ith === 0 || ith === dataset.length - (mode === 'card' && !overflowedTitle ? 0 : 1)) ? (
+							ith === 0 ? borderRadius + 'px 0px 0px 0px' : '0 0 0 ' + borderRadius + 'px'
+						) : undefined,
+						...styleLabel,
+					}}>
+						<div className={cls.ctnTextLabelDiv} style={{padding}}>{label}{separator || ':'}</div>
+					</div>
+					<div className={cls.ctnTextValue} style={{flex: fValue || flexValue, ...styleValue}}>
+						<div className={cls.ctnTextValueDiv} style={{padding}}>{value}</div>
+					</div>
+				</div>
+			))}
+		</div>
+	);
+
+	const renderTextRow = (ith: number, [[label, value, fLabel, fValue]]: ISingleLabelValue[]) => (
+		<div key={ith}>
+			<span className={cls.ctnPlainLabel}>{label}{separator || ': '}</span>
+			<span className={cls.ctnPlainValue}>{value}</span>
+		</div>
+	);
+
+
 	const onRightButtonClicked = () => setOverflowedTitle(!overflowedTitle);
-	const onMiddleButtonClicked = () => setMode(mode === 'card' ? 'text' : 'table');
+	const onMiddleButtonClicked = () => setMode(mode === 'card' ? 'text' : (mode === 'text' ? 'table' : 'card'));
 	const onMouseUpEvent = onOtherMouseButtonsClicked(onRightButtonClicked, onMiddleButtonClicked);
 
 	const renderCardTable = () => (
@@ -105,6 +133,13 @@ export const ViewInformativeTable = React.memo<IProps>((
 		</div>
 	);
 
+	const renderBorderlessTable = () => (
+		<div className={cls.card} style={borderRadius ? {borderRadius, ...style} : style}>
+			<div className={cls.heading} style={{color: '#396', fontSize: 'large', textAlign: 'left', padding: 8}} title={description} onMouseUp={onMouseUpEvent} onContextMenu={onContextMenuPrevented}>{title}</div>
+			{dataset.map((row: IRowLabelValue, index) => renderBorderlessTableRow(index + 1, Array.isArray(row[0]) ? row : [row] as ISingleLabelValue[]))}
+		</div>
+	);
+
 	const renderTable = () => (
 		<div className={className ? [cls.ctnTableRoot, className].join(' ') : cls.ctnTableRoot} style={borderRadius ? {borderRadius, ...style} : style}>
 			{dataset.map((row: IRowLabelValue, index) => renderComplexRow(index, Array.isArray(row[0]) ? row : [row] as ISingleLabelValue[]))}
@@ -112,9 +147,11 @@ export const ViewInformativeTable = React.memo<IProps>((
 	);
 
 	const renderTextView = () => (
-		<div>
-			<div className={cls.heading} style={{}} title={description} onMouseUp={onMouseUpEvent} onContextMenu={onContextMenuPrevented}>{title}</div>
-			{dataset.map((row: IRowLabelValue, index) => renderComplexRow(index, Array.isArray(row[0]) ? row : [row] as ISingleLabelValue[]))}
+		<div className={cls.ctnPlainCard} style={borderRadius ? {borderRadius, ...style} : style}>
+			<div className={cls.heading} style={{color: '#396', fontSize: 'large', textAlign: 'left', padding: 8}} title={description} onMouseUp={onMouseUpEvent} onContextMenu={onContextMenuPrevented}>{title}</div>
+			<div className={cls.ctnPlainBox}>
+				{dataset.map((row: IRowLabelValue, index) => renderTextRow(index + 1, Array.isArray(row[0]) ? row : [row] as ISingleLabelValue[]))}
+			</div>
 		</div>
 	);
 	const renderTextCard = () => (
@@ -128,7 +165,7 @@ export const ViewInformativeTable = React.memo<IProps>((
 		case 'card':
 			return overflowedTitle ? renderCard() : renderCardTable();
 		case 'table':
-			return renderTable();
+			return overflowedTitle ? renderBorderlessTable() : renderTable();
 		case 'text':
 			return overflowedTitle ? renderTextCard() : renderTextView();
 		default:

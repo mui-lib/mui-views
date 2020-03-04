@@ -38,4 +38,37 @@ export const useStyles = makeStyles({
 		display: 'flex', alignItems: 'center', wordBreak: 'break-all',
 	},
 	ctnTableValueDiv: {padding: '8px', display: 'flex'},
+
+	// May use alignItems: 'start' to keep children auto-sized, if they should.
+	ctnTextRoot: {display: 'flex', flexFlow: 'column', border: '1px solid #ccc'},
+	ctnTextRow: {display: 'flex'},
+	ctnTextRowsFollowed: {},
+	// ctnCellLabelValue: {display: 'flex', width: '100%'},
+	ctnTextLabel: {
+		color: '#999',
+		// The default padding and flex.
+		flex: 1,
+		display: 'flex', justifyContent: 'flex-end', alignItems: 'center',
+	},
+	// The default padding for label and value.
+	ctnTextLabelDiv: {padding: '4px', display: 'flex'},
+	//{display: 'inline-block', minWidth: '120px', color: '#000000d9'},
+	ctnTextValue: {
+		color: '#000000a6',
+		// The default padding and flex.
+		flex: 2,
+		overflowWrap: 'break-word',
+		// Forcefully break words inside the flex div.
+		// On the way being professional at CSSSS :) :) :) ;).
+		// @see https://stackoverflow.com/questions/26465745/ellipsis-in-flexbox-container
+		minWidth: '1%',
+		display: 'flex', alignItems: 'center', wordBreak: 'break-all',
+	},
+	ctnTextValueDiv: {padding: '4px', display: 'flex'},
+
+
+	ctnPlainCard: {background: 'white', borderRadius: '8px', margin: '8px', textAlign: 'center', padding: 8},
+	ctnPlainBox: {textAlign: 'left', margin: '0 8px 8px', lineHeight: '1.6em'},
+	ctnPlainLabel: {color: '#999'},
+	ctnPlainValue: {color: '#666'},
 });
