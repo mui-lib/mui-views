@@ -3,6 +3,10 @@
 import {makeStyles} from '@material-ui/core/styles';
 
 export const useStyles = makeStyles({
+	ctn: {margin: '8px'},
+	heading: {fontWeight: 'bold', color: '#888', lineHeight: '1.5em'},
+	card: {background: 'white', borderRadius: '8px', margin: '8px', textAlign: 'center'},
+
 	ctnRoot: {display: 'flex', flexFlow: 'column', alignItems: 'start'},
 	ctnRow: {display: 'flex'},
 	ctnLabel: {display: 'inline-block', minWidth: '120px', color: '#000000d9'},
