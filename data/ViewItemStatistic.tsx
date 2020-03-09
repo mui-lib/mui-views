@@ -25,8 +25,6 @@ export interface IStatisticDef<T = number> {
 	render?: (value: T) => string;
 }
 
-export type IStatisticCompressedDef<T = number> = [any, T, T?, string?, ((value: T) => string)?]
-
 // Displaying a single value as an single or standalone item.
 export const ViewItemStatistic = React.memo((props: IStatisticDef<number>) => {
 	const cls = useStyles();

@@ -10,11 +10,17 @@ export const useStyles = makeStyles({
 
 interface IProps {
 	title: string
+	secondary?: boolean;
 }
 
-export const AppPageHeader = React.memo(({title}: IProps) => {
+export const AppPageHeader = React.memo(({title, secondary}: IProps) => {
 	const cls = useStyles();
 	return (
-		<Typography gutterBottom variant="h3" component='h1' color='primary' className={cls.ctnPageTitle}>{title}</Typography>
+		<Typography
+			gutterBottom color='primary' className={cls.ctnPageTitle}
+			variant={secondary ? 'h4' : 'h3'} component={secondary ? 'h2' : 'h1'}
+		>
+			{title}
+		</Typography>
 	);
 });

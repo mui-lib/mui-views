@@ -2,7 +2,7 @@
 
 import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
-import {IStatisticCompressedDef, IStatisticDef, ViewItemStatistic} from './ViewItemStatistic';
+import {IStatisticDef, ViewItemStatistic} from './ViewItemStatistic';
 
 // For public views as shared components library, though being opinionated,
 // the consistency styling rules or principles may be practiced.
@@ -16,6 +16,8 @@ export const useStyles = makeStyles({
 	// A padding of 8 will be similarly fine.
 	card: {background: 'white', borderRadius: '12px', padding: '8px', margin: '8px 0', display: 'flex', textAlign: 'center'},
 });
+
+export type IStatisticCompressedDef<T = number> = [any, T, T?, string?, ((value: T) => string)?]
 
 interface IProps {
 	title?: string
