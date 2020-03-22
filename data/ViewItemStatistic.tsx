@@ -4,7 +4,7 @@ import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 
 export const useStyles = makeStyles({
-	item: {margin: '8px 12px'},
+	item: {margin: '8px 8px', textAlign: 'center', fontFamily: 'sans-serif'},
 	label: {color: '#888', margin: '8px'},
 
 	singleValue: {fontSize: 'xx-large', fontWeight: 'bold', color: '#3a3', textAlign: 'center'},
@@ -13,6 +13,7 @@ export const useStyles = makeStyles({
 	value: {fontSize: 'xx-large', color: '#3a3'},
 	slash: {fontSize: 'x-large', color: '#999', margin: '0 4px'},
 	total: {fontSize: 'large', color: '#666'},
+	unit: {fontSize: 'large', color: '#aaa'},
 
 	secondary: {color: '#fa4'},
 });
@@ -39,6 +40,7 @@ export const ViewItemStatistic = React.memo((props: IStatisticDef<number>) => {
 			<span className={cls.value}>{value}</span>
 			<span className={cls.slash}>/</span>
 			<span className={cls.total}>{total}</span>
+			{unit ? <span className={cls.unit}>{unit}</span> : undefined}
 		</div>
 	);
 	return (

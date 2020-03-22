@@ -17,14 +17,17 @@ export const useStyles = makeStyles({
 	card: {background: 'white', borderRadius: '12px', padding: '8px', margin: '8px 0', display: 'flex', textAlign: 'center'},
 });
 
+// [ label | value | total | unit | render ]
 export type IStatisticCompressedDef<T = number> = [any, T, T?, string?, ((value: T) => string)?]
+// export const dfCompressedStatistic = <T=number>(label: any, value: T, total?: T, unit?: string, render?: (value: T) => string): IStatisticCompressedDef<T> => ([label, value, total, unit, render]);
+export const dfCompressedStatistic = (label: any, value: number, total?: number, unit?: string, render?: (value: number) => string): IStatisticCompressedDef => ([label, value, total, unit, render]);
 
 interface IProps {
 	title?: string
 	description?: string;
 	statistics?: IStatisticDef<number>[];
 	data?: IStatisticCompressedDef[];
-	options?: IStatisticDef;
+	options?: Partial<IStatisticDef>;
 	style?: object;
 }
 
@@ -38,7 +41,7 @@ export const ViewCardStatistics = React.memo((
 ) => {
 	const cls = useStyles();
 
-	statistics = statistics || data?.map(([label, value, total, unit, render]): IStatisticDef => ({label, value, total, unit, render}));
+	statistics = statistics || data?.map(([label, value, total, unit, render]): IStatisticDef => ({label, value, total, unit: unit || options?.unit, render}));
 
 	const renderPanel = () => (
 		<div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center', ...style}}>
