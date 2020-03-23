@@ -61,7 +61,31 @@ often supported with simple and plain views.
 
 #### b. Available Views
 
+All components should named starting with "View", and hence its category. 
+
+Currently the categories are
+
+- Card
+	- A Card may often be an item of a gallery.
+- Gallery
+- Grid
+	- A grid may be a kind of dense gallery.
+- Item
+	- Item for Gallery
+- Table
+
+#### c. Available View Components
+
+Name the components following the above rule.
+
+- View Card Statistics
+- View Grid Calendar
+	- A dense grid containing usually indexed entries like a calendar.
+	- Good to be used for seats-table-like cases.
+- View Informative Table
+- View Item Statistics
 - View Plain List
+
 
 ### 3. Diagrams `diagrams`
 
@@ -72,6 +96,18 @@ The views containing visual diagrams.
 The views rendering kinds of text documents.
 
 - View Markdown
+
+### 5. Helpers
+
+
+### 6. Options
+
+The shared options empowering the available views.
+
+### 7. Themes
+
+The options related to coloring.
+
 
 ## III. References
 
