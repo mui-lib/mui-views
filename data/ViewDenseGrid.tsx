@@ -83,42 +83,42 @@ export const ViewDenseGrid = (
 
 	const [target, setTarget] = React.useState<ICompGridEntry>();
 
-	const rdSimpleItem = (item: ICompGridEntry, index: number) => (
+	const rdSimpleItem = (item: ICompGridEntry, index: number, selected: boolean) => (
 		<div
 			key={index}
 			className={clx(
 				cls.item,
 				border && cls.border,
 				text === 'dark' && cls.dark,
-				item === target && cls.selected,
+				selected && cls.selected,
 				square && cls.square,
 			)}
-			onClick={() => setTarget(item)}
+			onClick={() => selected ? setTarget(undefined) : setTarget(item)}
 		>
 			{item[0] === undefined ? index : item[0]}
 		</div>
 	);
 
-	const rdComplexItem = (item: ICompGridEntry, index: number) => (
+	const rdComplexItem = (item: ICompGridEntry, index: number, selected: boolean) => (
 		<div
 			key={index}
 			className={clx(
 				cls.bundle,
 				border && cls.border,
 				text === 'dark' && cls.dark,
-				item === target && cls.selected,
+				selected && cls.selected,
 				square && cls.square,
 			)}
-			onClick={() => setTarget(item)}
+			onClick={() => selected ? setTarget(undefined) : setTarget(item)}
 		>
-			<div className={clx(cls.value, item === target && cls.$value)}>{item[0] === undefined ? index : item[0]}</div>
-			<div className={clx(cls.label, item === target && cls.$label)}>{item[1]}</div>
+			<div className={clx(cls.value, selected && cls.$value)}>{item[0] === undefined ? index : item[0]}</div>
+			<div className={clx(cls.label, selected && cls.$label)}>{item[1]}</div>
 		</div>
 	);
 
 	return (
 		<div className={cls.root}>
-			{data?.map((item, index) => item[1] ? rdComplexItem(item, index) : rdSimpleItem(item, index))}
+			{data?.map((item, index) => item[1] ? rdComplexItem(item, index, item === target) : rdSimpleItem(item, index, item === target))}
 		</div>
 	);
 };
