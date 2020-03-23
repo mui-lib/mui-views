@@ -2,6 +2,7 @@
 
 import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
+import {clx} from '../utils/clx';
 
 // Consider to support the configure of size with "large=64px", "56", "normal=48", "40", "small=32".
 // Consider the feature of responsive sizing, with a fix number columns.
@@ -67,8 +68,6 @@ interface IProps extends IGridOptions, ItemOptions {
 	// theme?: ISelectableTheme;
 }
 
-const clsx = (...cls: (string | boolean | undefined)[]) => cls.filter(t => Boolean(t)).join(' ');
-
 // A dense grid containing usually indexed entries like a calendar.
 // Consider to implement a real calendar, and a real seats table, instead of a generic so-called grid.
 export const ViewDenseGrid = (
@@ -87,7 +86,7 @@ export const ViewDenseGrid = (
 	const rdSimpleItem = (item: ICompGridEntry, index: number) => (
 		<div
 			key={index}
-			className={clsx(
+			className={clx(
 				cls.item,
 				border && cls.border,
 				text === 'dark' && cls.dark,
@@ -103,7 +102,7 @@ export const ViewDenseGrid = (
 	const rdComplexItem = (item: ICompGridEntry, index: number) => (
 		<div
 			key={index}
-			className={clsx(
+			className={clx(
 				cls.bundle,
 				border && cls.border,
 				text === 'dark' && cls.dark,
@@ -112,8 +111,8 @@ export const ViewDenseGrid = (
 			)}
 			onClick={() => setTarget(item)}
 		>
-			<div className={clsx(cls.value, item === target && cls.$value)}>{item[0] === undefined ? index : item[0]}</div>
-			<div className={clsx(cls.label, item === target && cls.$label)}>{item[1]}</div>
+			<div className={clx(cls.value, item === target && cls.$value)}>{item[0] === undefined ? index : item[0]}</div>
+			<div className={clx(cls.label, item === target && cls.$label)}>{item[1]}</div>
 		</div>
 	);
 

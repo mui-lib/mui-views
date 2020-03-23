@@ -108,6 +108,18 @@ The shared options empowering the available views.
 
 The options related to coloring.
 
+### 8. Utils
+
+#### a. clx
+
+An alternative utility of [clsx](https://github.com/lukeed/clsx),
+to combine css class names conditionally,
+mentioned from [here](https://material-ui.com/getting-started/faq/#whats-the-clsx-dependency-for).
+
+```ts
+export const clx = (...fields: (string | boolean | undefined)[]) => fields.filter(t => Boolean(t)).join(' ');
+```
+
 
 ## III. References
 
