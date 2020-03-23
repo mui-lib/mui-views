@@ -3,12 +3,14 @@
 import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 
+// Consider to support the configure of size with "large=64px", "56", "normal=48", "40", "small=32".
+// Consider the feature of responsive sizing, with a fix number columns.
 const size = 54;
 
 const item = {
 	display: 'flex', justifyContent: 'center', alignItems: 'center',
 	width: size, height: size,
-	cursor: 'pointer',
+	cursor: 'pointer', fontFamily: 'sans-serif', overflow: 'hidden',
 };
 
 const useStyles = makeStyles({
@@ -19,9 +21,17 @@ const useStyles = makeStyles({
 	// black -> dark -> light -> white
 	dark: {color: '#555'},
 
-
 	selected: {background: '#0090f0', color: '#fff', borderRadius: '50%'},
 	square: {borderRadius: '8px'},
+
+	bundle: {
+		...item,
+		flexFlow: 'column nowrap',
+	},
+	value: {color: '#666', fontSize: '1.25em', fontWeight: 'bold'},
+	$value: {color: '#fff'},
+	label: {color: '#aaa', fontSize: '0.8em'},
+	$label: {color: '#f6f6f6'},
 });
 
 interface IGridEntry {
@@ -60,6 +70,7 @@ interface IProps extends IGridOptions, ItemOptions {
 const clsx = (...cls: (string | boolean | undefined)[]) => cls.filter(t => Boolean(t)).join(' ');
 
 // A dense grid containing usually indexed entries like a calendar.
+// Consider to implement a real calendar, and a real seats table, instead of a generic so-called grid.
 export const ViewDenseGrid = (
 	{
 		columns, labels, vertical,
@@ -89,9 +100,26 @@ export const ViewDenseGrid = (
 		</div>
 	);
 
+	const rdComplexItem = (item: ICompGridEntry, index: number) => (
+		<div
+			key={index}
+			className={clsx(
+				cls.bundle,
+				border && cls.border,
+				text === 'dark' && cls.dark,
+				item === target && cls.selected,
+				square && cls.square,
+			)}
+			onClick={() => setTarget(item)}
+		>
+			<div className={clsx(cls.value, item === target && cls.$value)}>{item[0] === undefined ? index : item[0]}</div>
+			<div className={clsx(cls.label, item === target && cls.$label)}>{item[1]}</div>
+		</div>
+	);
+
 	return (
 		<div className={cls.root}>
-			{data?.map(rdSimpleItem)}
+			{data?.map((item, index) => item[1] ? rdComplexItem(item, index) : rdSimpleItem(item, index))}
 		</div>
 	);
 };
