@@ -10,7 +10,7 @@ const size = 54;
 
 const item = {
 	display: 'flex', justifyContent: 'center', alignItems: 'center',
-	width: size, height: size,
+	width: size, height: size, borderRadius: '50%',
 	cursor: 'pointer', fontFamily: 'sans-serif', overflow: 'hidden',
 };
 
@@ -22,7 +22,7 @@ const useStyles = makeStyles({
 	// black -> dark -> light -> white
 	dark: {color: '#555'},
 
-	selected: {background: '#0090f0', color: '#fff', borderRadius: '50%'},
+	selected: {background: '#0090f0', color: '#fff'},
 	square: {borderRadius: '8px'},
 
 	bundle: {
@@ -93,6 +93,7 @@ export const ViewDenseGrid = (
 				selected && cls.selected,
 				square && cls.square,
 			)}
+			style={{color: item[2]}}
 			onClick={() => selected ? setTarget(undefined) : setTarget(item)}
 		>
 			{item[0] === undefined ? index : item[0]}
@@ -111,7 +112,7 @@ export const ViewDenseGrid = (
 			)}
 			onClick={() => selected ? setTarget(undefined) : setTarget(item)}
 		>
-			<div className={clx(cls.value, selected && cls.$value)}>{item[0] === undefined ? index : item[0]}</div>
+			<div className={clx(cls.value, selected && cls.$value)} style={{color: item[2]}}>{item[0] === undefined ? index : item[0]}</div>
 			<div className={clx(cls.label, selected && cls.$label)}>{item[1]}</div>
 		</div>
 	);
@@ -122,5 +123,3 @@ export const ViewDenseGrid = (
 		</div>
 	);
 };
-
-
