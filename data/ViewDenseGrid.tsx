@@ -16,7 +16,7 @@ const item = {
 
 const useStyles = makeStyles({
 	root: {margin: '0', display: 'flex', flexFlow: 'row wrap', background: '#f3f3f3', padding: '12px 8px'},
-	item: {...item, color: '#888', fontWeight: 'bold'},
+	item: {...item, fontSize: '24px', color: '#888', fontWeight: 'bold'},
 
 	border: {border: '1px solid #fff'},
 	// black -> dark -> light -> white
@@ -93,7 +93,7 @@ export const ViewDenseGrid = (
 				selected && cls.selected,
 				square && cls.square,
 			)}
-			style={{color: item[2]}}
+			style={selected ? {background: item[2]} : {color: item[2]}}
 			onClick={() => selected ? setTarget(undefined) : setTarget(item)}
 		>
 			{item[0] === undefined ? index : item[0]}
@@ -110,10 +110,11 @@ export const ViewDenseGrid = (
 				selected && cls.selected,
 				square && cls.square,
 			)}
+			style={selected ? {background: item[2]} : undefined}
 			onClick={() => selected ? setTarget(undefined) : setTarget(item)}
 		>
-			<div className={clx(cls.value, selected && cls.$value)} style={{color: item[2]}}>{item[0] === undefined ? index : item[0]}</div>
-			<div className={clx(cls.label, selected && cls.$label)}>{item[1]}</div>
+			<div className={clx(cls.value, selected && cls.$value)} style={selected ? undefined : {color: item[2]}}>{item[0] === undefined ? index : item[0]}</div>
+			<div className={clx(cls.label, selected && cls.$label)} style={selected ? undefined : {color: item[2]}}>{item[1]}</div>
 		</div>
 	);
 
