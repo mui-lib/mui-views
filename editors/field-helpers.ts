@@ -41,8 +41,8 @@ const newErrorChecker = (
 
 /* The definer of options for single(radios) and multiple(checkboxes) selector. */
 
-const newFieldOptions = <T extends string = string>(keys: T[], enums: { [key: string]: string }): ISelectorItem[] =>
-	keys.map(key => ({label: enums[key] || key, value: key}));
+const newFieldOptions = <T extends string = string>(enums: { [key: string]: string }, keys?: T[]): ISelectorItem[] =>
+	(keys || Object.keys(enums)).map(key => ({label: enums[key] || key, value: key}));
 
 
 export const EditorFieldHelper = {
