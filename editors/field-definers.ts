@@ -1,8 +1,8 @@
 //
 
 import {_CommonFields} from 'src/mui-lib/editors/commons';
-import {IInputFieldDefinition, ISelectorItem, ISingleSelectorFieldDefinition} from 'src/mui-lib/editors/definitions';
-import {FieldAutoCompleteOff, FieldMarginDense, FieldTypeRadio, FieldTypeString, FieldVariantOutlined} from 'src/mui-lib/editors/instances';
+import {IInputFieldDefinition, IMultipleSelectorFieldDefinition, ISelectorItem, ISingleSelectorFieldDefinition} from 'src/mui-lib/editors/definitions';
+import {FieldAutoCompleteOff, FieldMarginDense, FieldTypeGroupedCheckboxes, FieldTypeRadio, FieldTypeString, FieldVariantOutlined} from 'src/mui-lib/editors/instances';
 
 // The global options for all applications.
 const mAppFieldDefaultOptions = {
@@ -14,10 +14,18 @@ const mAppFieldDefaultOptions = {
 
 type funcGetErrorText = (value: string) => string | undefined;
 
+interface IFieldOptions {
+	type?: _CommonFields.IFieldTypeText;
+	multiline?: boolean;
+}
+
 interface IFieldDefiners {
 	df: (
-		id: string, label: string, placeholder: string, getErrorText?: funcGetErrorText,
+		id: string, label: string, placeholder: string, getErrorText?: funcGetErrorText, extras?: IFieldOptions,
 	) => IInputFieldDefinition;
+	dfGroupedCheckBoxes: (
+		id: string, label: string, direction: _CommonFields.IFieldGroupFlexDirection, values: ISelectorItem[], getErrorText?: funcGetErrorText, placeholder?: string,
+	) => IMultipleSelectorFieldDefinition
 	dfGroupedRadios: (
 		id: string, label: string, direction: _CommonFields.IFieldGroupFlexDirection, values: ISelectorItem[], getErrorText?: funcGetErrorText, placeholder?: string,
 	) => ISingleSelectorFieldDefinition
@@ -29,8 +37,17 @@ export const newEditorFieldDefiners = (options?: object): IFieldDefiners => {
 
 	const df = (
 		id: string, label: string, placeholder: string, getErrorText?: funcGetErrorText,
+		extras?: { type?: _CommonFields.IFieldTypeText },
 	): IInputFieldDefinition => ({
-		...ops, id, label, placeholder,
+		...ops, ...extras, id, label, placeholder,
+		required: Boolean(getErrorText), getErrorText,
+	});
+
+	const dfGroupedCheckBoxes = (
+		id: string, label: string, direction: _CommonFields.IFieldGroupFlexDirection, values: _CommonFields.ISelectorItem[], getErrorText?: funcGetErrorText, placeholder: string = '',
+	): IMultipleSelectorFieldDefinition => ({
+		...ops, type: FieldTypeGroupedCheckboxes, direction,
+		id, label, values, placeholder,
 		required: Boolean(getErrorText), getErrorText,
 	});
 
@@ -42,5 +59,5 @@ export const newEditorFieldDefiners = (options?: object): IFieldDefiners => {
 		required: Boolean(getErrorText), getErrorText,
 	});
 
-	return {df, dfGroupedRadios};
+	return {df, dfGroupedRadios, dfGroupedCheckBoxes};
 };
