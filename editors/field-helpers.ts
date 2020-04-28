@@ -1,6 +1,10 @@
 //
 
+import {ISelectorItem} from 'src/mui-lib/editors/definitions';
+
 type funcGetErrorText = (value: string) => string | undefined;
+
+/* The definer of field checker for errors with hints and limits. */
 
 interface ILimitHint {
 	limit: number;
@@ -35,8 +39,15 @@ const newErrorChecker = (
 		return;
 	};
 
+/* The definer of options for single(radios) and multiple(checkboxes) selector. */
+
+const newFieldOptions = <T extends string = string>(keys: T[], enums: { [key: string]: string }): ISelectorItem[] =>
+	keys.map(key => ({label: enums[key] || key, value: key}));
+
 
 export const EditorFieldHelper = {
 	obsoleteErrorChecker,
 	newErrorChecker,
+
+	newFieldOptions,
 };
