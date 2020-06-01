@@ -1,5 +1,6 @@
 import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import Stepper, {Orientation} from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
@@ -39,13 +40,16 @@ interface IProps {
 	desc?: boolean;
 	// noSteps?: boolean; // use no linear steps.
 	linear?: boolean; // The steps before the current step will be marked as done.
+	// Do expend the description, by default, yes.
 	expand?: boolean;
+	markdown?: boolean; // Support description in markdown format.
 }
 
 export const ViewTimeliner = React.memo((
 	{
 		entries, step = -1,
 		orientation = 'vertical', desc, expand, linear,
+		markdown,
 	}: IProps,
 ) => {
 	const cls = useStyles();
@@ -62,9 +66,10 @@ export const ViewTimeliner = React.memo((
 					<b>{name}</b>
 				</div>
 			</StepLabel>
-			<StepContent {...(expand ? {active: true} : undefined)} className={clx(cls.content, ith === step && cls.activeContent)}>
+			<StepContent active={expand !== false} className={clx(cls.content, ith === step && cls.activeContent)}>
 				{description ? (
-					<ViewMarkdown md={description || ''}/>
+					(markdown ? <ViewMarkdown md={description || ''}/> : <Typography>{description}</Typography>)
+					// (markdown ? <ViewMarkdown md={description || ''}/> : description)
 				) : undefined}
 			</StepContent>
 		</Step>
