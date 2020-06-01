@@ -60,7 +60,7 @@ export const ViewTimeliner = React.memo((
 		{name, description, icon, index, time}: ITimelinerEntry, ith: number,
 	) => (
 		<Step key={name} className={hasTime ? cls.stepWithExtraPaddingLeft : undefined}>
-			<StepLabel {...(desc ? {icon: entries.length - ith} : undefined)}>
+			<StepLabel icon={icon} {...(desc ? {icon: entries.length - ith} : undefined)}>
 				<div className={clx(cls.label, ith === step && cls.activeLabel)}>
 					{hasTime ? <span className={cls.time}>{time || ''} </span> : undefined}
 					<b>{name}</b>

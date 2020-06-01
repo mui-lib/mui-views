@@ -11,18 +11,18 @@ export interface IViewCardEntry {
 
 export const useStyles = makeStyles((theme: Theme) => createStyles({
 	root: {
-		margin: '8px 1%', padding: 16, minWidth: 200,
+		margin: '8px 1%', padding: 16, minWidth: 200, cursor: 'pointer',
 		background: '#fff', boxSizing: 'border-box', width: '48%',
 		display: 'flex', flexFlow: 'column nowrap',
 	},
 
-	head: {display: 'flex', flexFlow: 'row nowrap', cursor: 'pointer', alignItems: 'center'},
+	head: {display: 'flex', flexFlow: 'row nowrap', alignItems: 'center'},
 	avatar: {width: 36, height: 36, margin: '0 12px 0 0'},
 	avatar$large: {width: 45, height: 45, margin: '0 12px 0 0'},
 	name: {flex: 1, fontSize: '1.35em', color: '#099', fontWeight: 'bold'},
 	name$large: {flex: 1, fontSize: '1.75em', color: '#099', fontWeight: 'bold'},
 
-	body: {height: '64px', overflow: 'hidden', background: '#fcfcfc', margin: '5px 0', cursor: 'pointer'},
+	body: {height: '64px', overflow: 'hidden', background: '#fcfcfc', margin: '5px 0'},
 	description: {color: '#666', wordBreak: 'break-all'},
 
 	tail: {display: 'flex', flexFlow: 'row nowrap'},
@@ -43,7 +43,7 @@ export const ViewCardEntry = React.memo((
 	const {name, description, image} = entry;
 
 	const renderHead = () => (
-		<div className={cls.head} onClick={onClick}>
+		<div className={cls.head}>
 			{image ? (
 				<div className={size === 'large' ? cls.avatar$large : cls.avatar}>
 					<img className={size === 'large' ? cls.avatar$large : cls.avatar} src={image}/>
@@ -54,13 +54,13 @@ export const ViewCardEntry = React.memo((
 	);
 
 	const renderBody = () => description ? (
-		<div className={cls.body} onClick={onClick}>
+		<div className={cls.body}>
 			<Typography variant='body1' component='p' className={cls.description}>{description}</Typography>
 		</div>
 	) : undefined;
 
 	return (
-		<Paper className={cls.root} elevation={1}>
+		<Paper className={cls.root} elevation={1} onClick={onClick}>
 			{renderHead()}
 			{renderBody()}
 		</Paper>
