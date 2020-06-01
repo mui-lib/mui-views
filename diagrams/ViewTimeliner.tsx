@@ -18,6 +18,14 @@ export interface ITimelinerEntry {
 
 const useStyles = makeStyles({
 	ctn: {borderRadius: 8},
+	ctnWithExtraPaddingLeft: {
+		borderRadius: 8,
+		'& .MuiStepConnector-vertical': {padding: '0 0 8px 60px'},
+	},
+
+	stepWithExtraPaddingLeft: {position: 'relative', paddingLeft: '60px'},
+	time: {position: 'absolute', left: '0', width: '52px', textAlign: 'right'},
+
 	label: {fontSize: '1.1em'},
 	activeLabel: {color: '#099', fontSize: '1.25em'},
 	content: {color: 'gray'},
@@ -42,13 +50,15 @@ export const ViewTimeliner = React.memo((
 ) => {
 	const cls = useStyles();
 
+	const hasTime = Boolean(entries.find(en => Boolean(en.time)));
+
 	const rdEntries = () => entries.map((
 		{name, description, icon, index, time}: ITimelinerEntry, ith: number,
 	) => (
-		<Step key={name}>
+		<Step key={name} className={hasTime ? cls.stepWithExtraPaddingLeft : undefined}>
 			<StepLabel {...(desc ? {icon: entries.length - ith} : undefined)}>
 				<div className={clx(cls.label, ith === step && cls.activeLabel)}>
-					<span>{time || ''} </span>
+					{hasTime ? <span className={cls.time}>{time || ''} </span> : undefined}
 					<b>{name}</b>
 				</div>
 			</StepLabel>
@@ -62,7 +72,7 @@ export const ViewTimeliner = React.memo((
 
 	return (
 		<Stepper
-			className={cls.ctn} orientation={orientation}
+			className={hasTime ? cls.ctnWithExtraPaddingLeft : cls.ctn} orientation={orientation}
 			activeStep={step} nonLinear={!linear}
 		>
 			{rdEntries()}
