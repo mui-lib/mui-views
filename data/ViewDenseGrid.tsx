@@ -6,7 +6,7 @@ import {clx} from '../utils/clx';
 
 // Consider to support the configure of size with "large=64px", "56", "normal=48", "40", "small=32".
 // Consider the feature of responsive sizing, with a fix number columns.
-const size = 54;
+const size = 40;
 
 const item = {
 	display: 'flex', justifyContent: 'center', alignItems: 'center',
@@ -15,7 +15,7 @@ const item = {
 };
 
 const useStyles = makeStyles({
-	root: {margin: '0', display: 'flex', flexFlow: 'row wrap', background: '#f3f3f3', padding: '12px 8px'},
+	root: {margin: '0', display: 'flex', flexFlow: 'row wrap', padding: '12px 8px'},
 	item: {...item, fontSize: '24px', color: '#888', fontWeight: 'bold'},
 
 	border: {border: '1px solid #fff'},
@@ -63,6 +63,8 @@ interface ItemOptions {
 }
 
 interface IProps extends IGridOptions, ItemOptions {
+	value?: ICompGridEntry;
+	setValue?: (value: ICompGridEntry | undefined) => any;
 	data?: ICompGridEntry[];
 
 	// theme?: ISelectableTheme;
@@ -76,12 +78,15 @@ export const ViewDenseGrid = (
 		border, text,
 		square,
 		data,
+		value, setValue,
 	}: IProps,
 ) => {
 	const cls = useStyles();
 	if (labels) {columns = labels.length;}
 
-	const [target, setTarget] = React.useState<ICompGridEntry>();
+	const fs = React.useState<ICompGridEntry>();
+	const setTarget = setValue || fs[1];
+	const target = setValue ? value : fs[0];
 
 	const rdSimpleItem = (item: ICompGridEntry, index: number, selected: boolean) => (
 		<div

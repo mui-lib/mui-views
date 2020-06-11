@@ -44,10 +44,14 @@ const newErrorChecker = (
 const newFieldOptions = <T extends string = string>(enums: { [key: string]: string }, keys?: T[]): ISelectorItem[] =>
 	(keys || Object.keys(enums)).map(key => ({label: enums[key] || key, value: key}));
 
+const dfFieldOptions = (options: [string, string | undefined][]): ISelectorItem[] =>
+	options.map(([value, label]) => ({label: label || value, value}));
+
 
 export const EditorFieldHelper = {
 	obsoleteErrorChecker,
 	newErrorChecker,
 
 	newFieldOptions,
+	dfFieldOptions,
 };
