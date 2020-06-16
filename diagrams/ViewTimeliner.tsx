@@ -11,10 +11,10 @@ import {clx} from 'src/mui-views/utils/clx';
 export interface ITimelinerEntry {
 	name: string
 	index?: number;
-	icon?: string;
-	description?: string;
+	icon?: string | number | React.ReactNode;
+	description?: string | React.ReactNode;
 	// A tag, which is often a readable time, or etc.
-	time?: string;
+	time?: string | React.ReactNode;
 }
 
 const useStyles = makeStyles({
@@ -34,6 +34,8 @@ const useStyles = makeStyles({
 });
 
 interface IProps {
+	background?: string;
+
 	step?: number;
 	entries: ITimelinerEntry[];
 	orientation?: Orientation;
@@ -47,6 +49,7 @@ interface IProps {
 
 export const ViewTimeliner = React.memo((
 	{
+		background,
 		entries, step = -1,
 		orientation = 'vertical', desc, expand, linear,
 		markdown,
@@ -66,18 +69,20 @@ export const ViewTimeliner = React.memo((
 					<b>{name}</b>
 				</div>
 			</StepLabel>
-			<StepContent active={expand !== false} className={clx(cls.content, ith === step && cls.activeContent)}>
-				{description ? (
+			<StepContent
+				// @ts-ignore
+				active={expand !== false} className={clx(cls.content, ith === step && cls.activeContent)}>
+				{typeof description === 'string' ? (
 					(markdown ? <ViewMarkdown md={description || ''}/> : <Typography>{description}</Typography>)
 					// (markdown ? <ViewMarkdown md={description || ''}/> : description)
-				) : undefined}
+				) : description}
 			</StepContent>
 		</Step>
 	));
 
 	return (
 		<Stepper
-			className={hasTime ? cls.ctnWithExtraPaddingLeft : cls.ctn} orientation={orientation}
+			className={hasTime ? cls.ctnWithExtraPaddingLeft : cls.ctn} style={{background}} orientation={orientation}
 			activeStep={step} nonLinear={!linear}
 		>
 			{rdEntries()}
